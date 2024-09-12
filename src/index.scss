@@ -152,6 +152,27 @@ input:-webkit-autofill:active {
         margin-bottom: 0.4rem;
     }
 
+    .accordion {
+        .accordion-item {
+            background-color: transparent;
+            border: none;
+
+            .accordion-header {
+                margin-bottom: 0;
+
+                .accordion-button {
+                    padding: 0;
+                    box-shadow: none;
+                    background-color: transparent;
+                }
+            }
+
+            .accordion-body {
+                padding: 0;
+            }
+        }
+    }
+
     form {
         >div {
             &:not(:last-child) {

@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Save Data Offline",
+    "description": "A Chrome extension to save and manage data offline with form submission, local storage, and deletion functionality.",
+    "version": "1.0",
+    "permissions": [
+        "storage"
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ]
+}
