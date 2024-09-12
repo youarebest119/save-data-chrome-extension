@@ -4,8 +4,10 @@ import Button from "./components/Button/Button";
 import CopyIcon from "./components/CopyIcon/CopyIcon";
 import Input from "./components/Input/Input";
 import { Yup } from "./utils/utils";
+import { useState } from "react";
 
 const Application = () => {
+    const [search, setSearch] = useState("");
     const formik = useFormik({
         initialValues: {
             title: "",
@@ -58,7 +60,10 @@ const Application = () => {
                         </div>
                         :
                         <>
-                            <h2>Your Data</h2>
+                            <div className="data_list_header">
+                                <h2>Your Data</h2>
+                                <input onChange={e => setSearch(e.target.value)} value={search} placeholder="Search" />
+                            </div>
                             <div className="data_list_content">
                                 <ul>
                                     {

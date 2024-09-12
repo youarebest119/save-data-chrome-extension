@@ -241,6 +241,37 @@ input:-webkit-autofill:active {
             }
         }
 
+        .data_list_header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+
+            h2 {
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+
+            input {
+                width: 20rem;
+                margin-left: auto;
+                font-size: 1.3rem;
+                font-weight: 400;
+                color: #0d0d0d;
+                padding: 0 1.2rem;
+                border: 1px solid #f2f2f2;
+                outline: none;
+                border-radius: 0.6rem;
+                height: 3rem;
+                background-color: white;
+                transition: 300ms ease-in-out;
+
+                &:focus {
+                    box-shadow: 0 0 1rem 1rem rgba(#f5d5d5, 0.15);
+                    // border-color: #f5d5d5;
+                }
+            }
+        }
+
         .data_list_content {
             max-height: 100px;
             overflow: auto;
