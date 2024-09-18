@@ -43,6 +43,7 @@ const CopyIcon = ({ value }: { value?: string }) => {
                 whileHover={!copied ? "hover" : ""}
                 initial="hidden"
                 animate="visible"
+                title="Copy"
             >
                 {!copied ? (
                     <svg

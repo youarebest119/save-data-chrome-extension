@@ -143,8 +143,17 @@ input:-webkit-autofill:active {
 }
 
 .application {
+    // padding: 1rem 2rem 2rem;
     padding: 2rem;
     background-color: #f1f1f1;
+
+    h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     h2 {
         font-size: 1.4rem;
@@ -164,6 +173,10 @@ input:-webkit-autofill:active {
                     padding: 0;
                     box-shadow: none;
                     background-color: transparent;
+
+                    h2 {
+                        color: #212529;
+                    }
                 }
             }
 
@@ -272,7 +285,7 @@ input:-webkit-autofill:active {
                 white-space: nowrap;
             }
 
-            input {
+            .search_input {
                 width: 20rem;
                 margin-left: auto;
                 font-size: 1.3rem;
@@ -291,6 +304,22 @@ input:-webkit-autofill:active {
                     // border-color: #f5d5d5;
                 }
             }
+
+            .download_btn {
+                width: 2.8rem;
+                height: 2.8rem;
+                background-color: white;
+                border: none;
+                outline: none;
+                padding: 0.8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                border-radius: 0.4rem;
+                margin-left: 0.4rem;
+            }
+
         }
 
         .data_list_content {
