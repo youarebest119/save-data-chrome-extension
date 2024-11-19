@@ -122,6 +122,7 @@ const Application = () => {
                         value={search}
                         placeholder="Search"
                         className="search_input"
+                        autoFocus
                     />
                     <button type="button" title="Export data" className="download_btn" onClick={() => handleDownload(dataList)}><DownloadIcon /></button>
                 </div>
