@@ -1,11 +1,11 @@
 import { useFormik } from "formik";
 import moment from "moment";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Accordion, Dropdown } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
-import { BookMarkIcon, NoDataIcon } from "./assets/icons/icons";
+import { BookMarkIcon, NoDataIcon, UploadIcon } from "./assets/icons/icons";
 import Button from "./components/Button/Button";
 import DataItem from "./components/DataItem/DataItem";
 import EditNote from "./components/EditNote/EditNote";
@@ -14,6 +14,8 @@ import { deleteNote, setNote } from "./store/notes.slice";
 import { useAppDispatch, useAppSelector } from "./store/store";
 import { PROFILE_IMG } from "./utils/constants";
 import { Yup } from "./utils/utils";
+import { useDropzone } from 'react-dropzone'
+import Spinner from "./components/Spinner/Spinner";
 
 export type DataType = {
     title: string,
@@ -50,7 +52,7 @@ const Application = () => {
     });
 
     // Delete item from the list
-    const handleDelete = (id: string) => {
+    const handleDelete = useCallback((id: string) => {
         Swal.fire({
             title: "Do you want to continue",
             showCancelButton: true,
@@ -63,8 +65,7 @@ const Application = () => {
                 toast.success("Removed")
             }
         });
-
-    };
+    }, [dispatch])
 
     // Filtered data based on search
     const filteredDataList = useMemo(() => {
@@ -85,7 +86,7 @@ const Application = () => {
                 <id>${item.id}</id> 
                 <title>${item.title}</title>
                 <password>${item.password}</password> 
-                <createAt>${moment(item.createdAt).format("MMMM Do YYYY, h:mm:ss a")}</createAt> 
+                <createdAt>${moment(item.createdAt).format("MMMM Do YYYY, h:mm:ss a")}</createdAt> 
                 <lastUpdated>${moment(item.updatedAt).format("MMMM Do YYYY, h:mm:ss a")}</lastUpdated> 
                 ${item.description ? `<description>${item.description}</description>` : ""}
                 ${item.isFavourite ? `<favourited>${item.isFavourite}</favourited>` : ""}
@@ -103,6 +104,50 @@ const Application = () => {
         link.click();
         document.body.removeChild(link);
     };
+    const [isUploading, setIsUploading] = useState(false);
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        setIsUploading(true);
+        if (acceptedFiles.length === 1) {
+            let file = acceptedFiles[0];
+
+            const reader = new FileReader();
+
+            reader.onerror = () => { };
+            reader.onload = () => {
+                let content = reader.result as string;
+                if (content) {
+                    const parser = new DOMParser();
+                    let output = parser.parseFromString(content, "application/xml");
+                    const items = output.querySelectorAll("item");
+                    if (items.length > 0) {
+                        Swal.fire({
+                            titleText: "If found, only title and password will be picked from your file.",
+                            text: "XML file should have data > item > title + (value | password)",
+                        }).then(response => {
+                            if (response.isConfirmed) {
+
+                                items.forEach((item) => {
+                                    // const id = item.querySelector("id")?.textContent || "";
+                                    const title = item.querySelector("title")?.textContent || "";
+                                    const password = item.querySelector("password")?.textContent || item.querySelector("value")?.textContent || "";
+                                    // const updatedAt = item.querySelector("lastUpdated")?.textContent || "";
+                                    // const createdAt = item.querySelector("createdAt")?.textContent || "";
+
+                                    dispatch(setNote({
+                                        title,
+                                        password,
+                                    }))
+                                });
+                            }
+                        })
+                    }
+                }
+            }
+            reader.readAsText(file);
+        }
+        setIsUploading(false);
+    }, [])
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ maxFiles: 1, onDrop })
 
     return (
         <div className="application">
@@ -161,6 +206,22 @@ const Application = () => {
                         className="search_input"
                         autoFocus
                     />
+                    <div className="upload_area" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        {
+                            isDragActive ?
+                                <div className="full_screen_upload">
+                                    <p>Drop the files here ...</p>
+                                </div> :
+                                <div className="upload_btn" title="Upload your xml">
+                                    {
+                                        isUploading ?
+                                            <Spinner /> :
+                                            <UploadIcon />
+                                    }
+                                </div>
+                        }
+                    </div>
                 </div>
                 {(notes.length === 0 || filteredDataList.length === 0) ? (
                     <div className="no_data">
