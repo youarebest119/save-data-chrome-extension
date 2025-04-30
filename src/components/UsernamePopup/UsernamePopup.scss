@@ -1,0 +1,66 @@
+@use "../../assets/theme/_var.scss" as *;
+
+.username_popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 0.1);
+    backdrop-filter: blur(1rem);
+    z-index: 2;
+    border-radius: inherit;
+
+    .dialog {
+        padding: 1rem;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .content {
+            background-color: white;
+            padding: 1.6rem;
+            border-radius: 0.8rem;
+
+            .note_txt {
+                padding: 0.4rem 0.8rem;
+                font-size: 1.2rem;
+                background-color: rgba(rgb(211, 211, 73), 0.2);
+                border: 1px solid rgba(rgb(211, 211, 73), 0.2);
+                border-radius: 0.8rem;
+                display: flex;
+                align-items: center;
+                margin: 0.6rem 0 0;
+
+                svg {
+                    flex-shrink: 0;
+                    margin-right: 0.4rem;
+                    width: 1.6rem;
+                    height: auto;
+                }
+            }
+
+            .custom_input {
+                .input_in {
+                    &.right_icon_input {
+                        .input_right_icon {
+                            right: 0.5rem;
+
+                            .custom_btn {
+                                width: 3.2rem;
+                                height: 3.2rem;
+                                padding: 0;
+                            }
+                        }
+
+                        input {
+                            padding-right: 4rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

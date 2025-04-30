@@ -1,0 +1,42 @@
+@use "../../assets/theme/_var.scss" as *;
+
+.change_user_key_modal.modal {
+    padding: 0.75rem;
+    position: absolute;
+
+    .modal-content {
+        background-color: white;
+        padding: 1.6rem;
+        border-radius: 0.8rem;
+        border: none;
+
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        form {
+            .custom_input {
+                &:not(:last-of-type) {
+                    margin-bottom: 0.8rem;
+                }
+            }
+
+            button[type="submit"] {
+                margin-top: 0.8rem;
+            }
+        }
+
+        .cancel_btn {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            text-align: center;
+            display: block;
+            width: 100%;
+            margin-top: 0.8rem;
+            font-size: 1.2rem;
+            color: red;
+        }
+    }
+}

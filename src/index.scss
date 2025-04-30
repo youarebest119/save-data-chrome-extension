@@ -6,6 +6,7 @@ html {
 }
 
 body {
+    position: relative;
     font-size: 1.6rem;
     width: 40rem;
     font-family: "Inter", sans-serif;
@@ -142,10 +143,90 @@ input:-webkit-autofill:active {
     padding: 0 1.5rem;
 }
 
+.custom_input {
+    .custom_label {
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: #0d0d0d;
+    }
+
+    .input_in {
+        input {
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #0d0d0d;
+            padding: 0 1.6rem;
+            border: 1px solid #f2f2f2;
+            width: 100%;
+            outline: none;
+            border-radius: 1rem;
+            height: 4rem;
+            background-color: white;
+            transition: 300ms ease-in-out;
+
+            &:focus {
+                box-shadow: 0 0 1rem 1rem rgba(#f5d5d5, 0.15);
+                // border-color: #f5d5d5;
+            }
+        }
+
+        &.icon_input {
+            position: relative;
+
+            .input_icon {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 0.8rem;
+                display: inline-flex;
+
+                svg {
+                    width: 1.4rem;
+                    height: 1.4rem;
+                }
+            }
+
+            input {
+                padding-left: 3rem;
+            }
+        }
+
+        &.right_icon_input {
+            position: relative;
+
+            .input_right_icon {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 0.8rem;
+                display: inline-flex;
+
+                svg {
+                    width: 1.4rem;
+                    height: 1.4rem;
+                }
+            }
+
+            input {
+                padding-right: 3rem;
+            }
+        }
+    }
+
+    .error_msg {
+        font-size: 1.1rem;
+        font-weight: 500;
+        letter-spacing: 0.04rem;
+        color: red;
+    }
+}
+
 .application {
     // padding: 1rem 2rem 2rem;
     padding: 2rem;
     background-color: #f1f1f1;
+    position: relative;
+    z-index: 1;
 
     h1 {
         font-size: 1.6rem;
@@ -159,6 +240,52 @@ input:-webkit-autofill:active {
         font-size: 1.4rem;
         font-weight: 600;
         margin-bottom: 0.4rem;
+    }
+
+    .profile_dropdown {
+        margin: 0 0 1rem auto;
+        width: fit-content;
+
+        .dropdown-toggle {
+            background-color: transparent;
+            border: 2px solid #e16449;
+            outline: none;
+            box-shadow: none;
+            border-radius: 50%;
+            width: 3.2rem;
+            height: 3.2rem;
+            padding: 0;
+
+            &::after {
+                content: unset;
+            }
+        }
+
+        .dropdown-menu {
+            right: 0 !important;
+            left: unset !important;
+            padding: 0.8rem;
+            border: 1px solid #f2f2f2;
+            border-radius: 0.8rem;
+
+            a {
+                display: block;
+                font-size: 1.2rem;
+                color: black;
+                transition: 200ms ease-in-out;
+                padding: 0.3rem 0.8rem;
+                border-radius: 0.8rem;
+
+                &:not(:last-child) {
+                    margin-bottom: 0.1rem;
+                }
+
+                &:hover {
+                    background-color: #e16449;
+                    color: white;
+                }
+            }
+        }
     }
 
     .accordion {
@@ -197,62 +324,6 @@ input:-webkit-autofill:active {
             margin-top: 1rem;
         }
 
-        .custom_input {
-            .custom_label {
-                font-size: 1.2rem;
-                font-weight: 400;
-                color: #0d0d0d;
-            }
-
-            .input_in {
-                input {
-                    font-size: 1.4rem;
-                    font-weight: 400;
-                    color: #0d0d0d;
-                    padding: 0 1.6rem;
-                    border: 1px solid #f2f2f2;
-                    width: 100%;
-                    outline: none;
-                    border-radius: 1rem;
-                    height: 4rem;
-                    background-color: white;
-                    transition: 300ms ease-in-out;
-
-                    &:focus {
-                        box-shadow: 0 0 1rem 1rem rgba(#f5d5d5, 0.15);
-                        // border-color: #f5d5d5;
-                    }
-                }
-
-                &.icon_input {
-                    position: relative;
-
-                    .input_icon {
-                        position: absolute;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        left: 0.8rem;
-                        display: inline-flex;
-
-                        svg {
-                            width: 1.4rem;
-                            height: 1.4rem;
-                        }
-                    }
-
-                    input {
-                        padding-left: 3rem;
-                    }
-                }
-            }
-
-            .error_msg {
-                font-size: 1.1rem;
-                font-weight: 500;
-                letter-spacing: 0.04rem;
-                color: red;
-            }
-        }
     }
 
     .data_list {
@@ -327,6 +398,7 @@ input:-webkit-autofill:active {
             overflow: auto;
             padding-right: 0.8rem;
             margin-right: -0.8rem;
+            min-height: 100px;
 
             &::-webkit-scrollbar {
                 width: 0.8rem;
@@ -403,10 +475,59 @@ input:-webkit-autofill:active {
                                     height: 1.8rem;
                                 }
                             }
+
+                            .item_more {
+                                .dropdown-toggle {
+                                    &::after {
+                                        content: unset;
+                                    }
+                                }
+
+                                .dropdown-menu {
+                                    right: 0 !important;
+                                    left: unset !important;
+                                    padding: 0.8rem;
+                                    border: 1px solid #f2f2f2;
+                                    border-radius: 0.8rem;
+                                    transform: none !important;
+                                    top: 100% !important;
+                                    align-items: center;
+
+                                    &.show {
+                                        display: flex;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+div:where(.swal2-container).swal2-center {
+    position: absolute;
+
+    div:where(.swal2-popup) {
+        width: 25rem;
+        padding-bottom: 1.8rem;
+        background-color: white;
+        padding: 1.6rem;
+        border-radius: 0.8rem;
+        border: none;
+    }
+
+    .swal2-title {
+        padding-top: 1.8rem;
+        font-size: 1.4rem;
+    }
+
+    .swal2-actions {
+        margin-top: 1.6rem;
+
+        button {
+            border-radius: 0.8rem;
         }
     }
 }

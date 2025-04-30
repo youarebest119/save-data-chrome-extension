@@ -1,0 +1,1 @@
+export const PROFILE_IMG = "https://avatar.iran.liara.run/public";

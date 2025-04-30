@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { DeleteIcon, EyeClosed, EyeOpen } from '../../assets/icons/icons';
+import { Dropdown } from 'react-bootstrap';
+import { DeleteIcon, Ellipsis, EyeClosed, EyeOpen, InfoIcon, PenIcon } from '../../assets/icons/icons';
 import CopyIcon from '../CopyIcon/CopyIcon';
 
 type PropTypes = {
     title: string;
     value: string;
+    handleEdit: () => void,
     handleDelete: () => void,
+    updatedAt: string,
 }
 
-const DataItem = ({ title, handleDelete, value }: PropTypes) => {
+const DataItem = ({ title, handleEdit, handleDelete, updatedAt, value }: PropTypes) => {
     const [show, setShow] = useState(false);
     return (
         <div className="data_list_item">
@@ -20,11 +23,35 @@ const DataItem = ({ title, handleDelete, value }: PropTypes) => {
                 <button title="show/hide" type="button" onClick={() => setShow(!show)}>
                     {!show ? <EyeClosed /> : <EyeOpen />}
                 </button>
-                {/* <button type="button"><PenIcon /></button> */}
                 <CopyIcon value={value} />
-                <button title="Delete" type="button" onClick={handleDelete}>
-                    <DeleteIcon />
-                </button>
+                <Dropdown className="item_more">
+                    <Dropdown.Toggle type="button">
+                        <Ellipsis />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        {/* <button title="Archive" type="button">
+                            {false ? <ArchivedIcon /> : <ArchiveIcon />}
+                        </button>
+                        <button title="Save" type="button">
+                            {true ? <SavedIcon /> : <SaveIcon />}
+                        </button>
+                        <button title="Favourite" type="button">
+                            {true ? <FavedIcon /> : <FavIcon />}
+                        </button>
+                        <button title="Old Versions" type="button">
+                            <HistoryIcon />
+                        </button> */}
+                        <button title={updatedAt} type="button">
+                            <InfoIcon />
+                        </button>
+                        <button title="Delete" type="button" onClick={handleDelete}>
+                            <DeleteIcon />
+                        </button>
+                        <button title="Edit" type="button" onClick={handleEdit}>
+                            <PenIcon />
+                        </button>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
         </div>
     )

@@ -1,12 +1,19 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { Accordion } from "react-bootstrap";
-import { BookMarkIcon, DownloadIcon, NoDataIcon } from "./assets/icons/icons";
+import moment from "moment";
+import { useMemo, useState } from "react";
+import { Accordion, Dropdown } from "react-bootstrap";
+import toast from "react-hot-toast";
+import { NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
+import { BookMarkIcon, NoDataIcon } from "./assets/icons/icons";
 import Button from "./components/Button/Button";
 import DataItem from "./components/DataItem/DataItem";
+import EditNote from "./components/EditNote/EditNote";
 import Input from "./components/Input/Input";
+import { deleteNote, setNote } from "./store/notes.slice";
+import { useAppDispatch, useAppSelector } from "./store/store";
+import { PROFILE_IMG } from "./utils/constants";
 import { Yup } from "./utils/utils";
-import toast from "react-hot-toast";
 
 export type DataType = {
     title: string,
@@ -14,22 +21,14 @@ export type DataType = {
     time: string,
 }
 
+
 const Application = () => {
     const [search, setSearch] = useState("");
-    const [dataList, setDataList] = useState<{ title: string; value: string; }[]>([]);
-
-    // Load persisted data from localStorage on mount
-    useEffect(() => {
-        const storedData = localStorage.getItem('dataList');
-        if (storedData) {
-            setDataList(JSON.parse(storedData));
-        }
-    }, []);
-
-    // Update localStorage when dataList changes
-    useEffect(() => {
-        localStorage.setItem('dataList', JSON.stringify(dataList));
-    }, [dataList]);
+    // const [show, setShow] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [id, setId] = useState("")
+    const { notes } = useAppSelector(state => state.notes);
+    const dispatch = useAppDispatch();
 
     const formik = useFormik({
         initialValues: {
@@ -42,10 +41,8 @@ const Application = () => {
         }),
         onSubmit: (values, helpers) => {
             helpers.setSubmitting(true);
-
-            // Add the new data to the list and reset the form
-            const newData = { title: values.title, value: values.value };
-            setDataList([newData, ...dataList]);
+            const newData = { title: values.title, password: values.value };
+            dispatch(setNote(newData))
             formik.resetForm();
             helpers.setSubmitting(false);
             toast.success("Data Added");
@@ -53,22 +50,48 @@ const Application = () => {
     });
 
     // Delete item from the list
-    const handleDelete = (index: number) => {
-        const updatedDataList = dataList.filter((_, i) => i !== index);
-        setDataList(updatedDataList);
+    const handleDelete = (id: string) => {
+        Swal.fire({
+            title: "Do you want to continue",
+            showCancelButton: true,
+            confirmButtonText: "Delete",
+            cancelButtonText: "Discard",
+            confirmButtonColor: "#e16449",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(deleteNote(id))
+                toast.success("Removed")
+            }
+        });
+
     };
 
     // Filtered data based on search
-    const filteredDataList = dataList.filter(item =>
-        item.title.toLowerCase().includes(search.toLowerCase()) ||
-        item.value.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredDataList = useMemo(() => {
+        return notes.filter(item =>
+            item.title.toLowerCase().includes(search.toLowerCase()) ||
+            item.password.toLowerCase().includes(search.toLowerCase()) ||
+            item.id.toLowerCase().includes(search.toLowerCase()) ||
+            item.createdAt.toLowerCase().includes(search.toLowerCase())
+        )
+    }, [notes, search])
 
     // Function to convert data to XML format and trigger download
-    const handleDownload = (data: { title: string; value: string; }[]) => {
+    const handleDownload = () => {
         let xmlData = '<?xml version="1.0" encoding="UTF-8"?>\n<data>\n';
-        data.forEach(item => {
-            xmlData += `  <item>\n    <title>${item.title}</title>\n    <value>${item.value}</value>\n  </item>\n`;
+        notes.forEach(item => {
+            xmlData += `
+            <item>
+                <id>${item.id}</id> 
+                <title>${item.title}</title>
+                <password>${item.password}</password> 
+                <createAt>${moment(item.createdAt).format("MMMM Do YYYY, h:mm:ss a")}</createAt> 
+                <lastUpdated>${moment(item.updatedAt).format("MMMM Do YYYY, h:mm:ss a")}</lastUpdated> 
+                ${item.description ? `<description>${item.description}</description>` : ""}
+                ${item.isFavourite ? `<favourited>${item.isFavourite}</favourited>` : ""}
+                ${item.isSaved ? `<saved>${item.isSaved}</saved>` : ""}
+                ${item.isArchived ? `<archived>${item.isArchived}</archived>` : ""}
+            </item>`;
         });
         xmlData += '</data>';
 
@@ -83,7 +106,21 @@ const Application = () => {
 
     return (
         <div className="application">
-            {/* <h1>Extension <button></button></h1> */}
+            <Dropdown className="profile_dropdown">
+                <Dropdown.Toggle>
+                    <img src={PROFILE_IMG} alt="" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <NavLink to="/">Home</NavLink>
+                    {/* <NavLink to="/favourites">Favourites</NavLink>
+                    <NavLink to="/saved">Saved</NavLink>
+                    <NavLink to="/archived">Archived</NavLink> 
+                    <NavLink to="/" onClick={(e) => { e.preventDefault(); setShow(true) }}>Settings</NavLink>
+                    */}
+                    <NavLink to="/" onClick={() => handleDownload()}>Export</NavLink>
+                </Dropdown.Menu>
+            </Dropdown>
+            {/* <ChangeUserKey show={show} handleClose={() => setShow(false)} /> */}
             <Accordion>
                 <Accordion.Item eventKey="save-data">
                     <Accordion.Header>
@@ -124,9 +161,8 @@ const Application = () => {
                         className="search_input"
                         autoFocus
                     />
-                    <button type="button" title="Export data" className="download_btn" onClick={() => handleDownload(dataList)}><DownloadIcon /></button>
                 </div>
-                {(dataList.length === 0 || filteredDataList.length === 0) ? (
+                {(notes.length === 0 || filteredDataList.length === 0) ? (
                     <div className="no_data">
                         <NoDataIcon />
                         <p>No Record Found</p>
@@ -138,9 +174,11 @@ const Application = () => {
                                 {filteredDataList.map((item, index) => (
                                     <li key={index}>
                                         <DataItem
-                                            handleDelete={() => handleDelete(index)}
+                                            updatedAt={`Updated ${moment(new Date(item.updatedAt)).fromNow()}`}
+                                            handleDelete={() => handleDelete(item.id)}
+                                            handleEdit={() => { setEdit(true); setId(item.id) }}
                                             title={item.title}
-                                            value={item.value}
+                                            value={item.password}
                                         />
                                     </li>
                                 ))}
@@ -149,6 +187,7 @@ const Application = () => {
                     </>
                 )}
             </div>
+            <EditNote show={edit} id={id} handleClose={() => { setEdit(false); setId("") }} />
         </div>
     );
 };
