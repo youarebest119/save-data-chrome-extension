@@ -1,10 +1,22 @@
 {
     "manifest_version": 3,
     "name": "Save Data Offline",
-    "description": "A Chrome extension to save and manage data offline with form submission, local storage, and deletion functionality.",
+    "description": "AThe purpose of this extension is to allow users to save their data locally, providing an easy way to store and retrieve user preferences and information.",
     "version": "1.1",
+    "icons": {
+        "16": "icons/icon16.png",
+        "32": "icons/icon32.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
     "permissions": [],
     "action": {
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "32": "icons/icon32.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        },
         "default_popup": "index.html"
     },
     "host_permissions": []
